@@ -9,37 +9,19 @@ const path = require('path'); // Modul bawaan Node.js untuk bekerja dengan jalur
 // Membuat instance aplikasi Express
 const app = express();
 
-// Menentukan port di mana server akan berjalan.
-// Menggunakan process.env.PORT untuk deployment (misalnya di hosting), atau 3000 jika dijalankan lokal.
 const PORT = process.env.PORT || 3000;
 
-// ==========================================================
-// MIDDLEWARE
-// Middleware adalah fungsi yang dijalankan sebelum rute handler
-// ==========================================================
-
-// Middleware untuk mem-parsing body permintaan dalam format JSON
-// Diperlukan untuk membaca data yang dikirim dari form JavaScript/AJAX
 app.use(express.json());
 
-// Middleware untuk mem-parsing body permintaan dalam format URL-encoded
+
 // Diperlukan untuk membaca data yang dikirim dari form HTML biasa
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware untuk menyajikan file statis (HTML, CSS, JavaScript frontend)
-// '__dirname' adalah variabel global Node.js yang menyimpan jalur direktori file saat ini (tempat server.js berada)
-// Ini berarti semua file di folder yang sama dengan server.js (termasuk index.html, folder js/) akan dapat diakses oleh browser
 app.use(express.static(__dirname));
 
-// ==========================================================
-// ROUTES
-// Rute mendefinisikan bagaimana server merespons permintaan klien
-// ==========================================================
 
-// Rute untuk Halaman Utama (Root URL: http://localhost:3000/)
 app.get('/', (req, res) => {
-    // Mengirimkan file index.html sebagai respons ketika root URL diakses
-    // path.join() digunakan untuk membangun jalur file yang aman dan benar di berbagai OS
+    
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -58,25 +40,19 @@ app.post('/send-email', (req, res) => {
     // Mengambil data yang dikirim dari formulir (nama, email, pesan) dari body permintaan
     const { name, email, message } = req.body;
 
-    // ==========================================================
-    // VALIDASI (Opsional tapi Direkomendasikan)
-    // ==========================================================
-    // Validasi dasar: Memastikan semua kolom wajib (nama, email, pesan) tidak kosong
+    
     if (!name || !email || !message) {
-        // Jika ada kolom yang kosong, server akan mengarahkan ulang (redirect) kembali
-        // ke halaman kontak dan menambahkan parameter 'status=error' dan 'message' di URL
         // encodeURIComponent() memastikan teks pesan aman untuk URL
         return res.redirect('/#contact?status=error&message=' + encodeURIComponent('Semua kolom harus diisi.'));
     }
 
     // ==========================================================
     // OPSI EMAIL
-    // Mendefinisikan detail email yang akan dikirim
-    // ==========================================================
+
     const mailOptions = {
         from: process.env.EMAIL_USER, // Alamat email dari siapa email dikirim
         to: process.env.EMAIL_USER, // Alamat email tujuan (Anda bisa ganti ke email MBC Lab resmi jika ada)
-                                    // Untuk testing, gunakan email Anda sendiri agar mudah memverifikasi
+                        
         subject: `Pesan dari Landing Page MBC Lab: ${name}`, // Subjek email
         html: `
             <p><strong>Nama:</strong> ${name}</p>
@@ -85,10 +61,8 @@ app.post('/send-email', (req, res) => {
         ` // Isi email dalam format HTML
     };
 
-    // ==========================================================
+    
     // PENGIRIMAN EMAIL
-    // Menggunakan Nodemailer untuk mengirim email
-    // ==========================================================
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error('Error sending email:', error); // Log error di terminal server jika pengiriman gagal
@@ -102,10 +76,7 @@ app.post('/send-email', (req, res) => {
     });
 });
 
-// ==========================================================
-// MEMULAI SERVER
-// Server mulai mendengarkan permintaan masuk
-// ==========================================================
+
 app.listen(PORT, () => {
     // Menampilkan pesan di konsol (terminal) saat server berhasil dimulai
     console.log(`Server berjalan di http://localhost:${PORT}`);

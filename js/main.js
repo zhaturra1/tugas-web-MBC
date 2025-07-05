@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Fungsi untuk smooth scrolling (jika perlu, bisa juga dihandle murni dengan CSS)
+   
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
@@ -10,8 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Mengambil elemen formulir dan div pesan dari HTML
-    // PASTIKAN ID INI COCOK DENGAN YANG ADA DI index.html
+
     const form = document.getElementById('contactForm'); // ID dari tag <form>
     const formMessage = document.getElementById('formMessage'); // ID dari div pesan
 
@@ -35,18 +34,17 @@ const status = urlParams.get('status');   // Mengambil nilai parameter 'status'
     // Jika ada parameter 'message' di URL (artinya ada feedback dari server)
     if (message) {
         formMessage.textContent = decodeURIComponent(message); // Menampilkan teks pesan
-        formMessage.classList.remove('hidden'); // Menghapus kelas 'hidden' agar div pesan terlihat
-
-        // Mengatur gaya (warna latar belakang dan teks) berdasarkan status
+        formMessage.classList.remove('hidden'); 
+        
         if (status === 'success') {
-            formMessage.classList.add('bg-green-100', 'text-green-800'); // Gaya sukses (hijau)
-            formMessage.classList.remove('bg-red-100', 'text-red-800'); // Menghapus gaya error jika ada
-            if (form) { // Pastikan elemen form ditemukan sebelum direset
-                form.reset(); // Mengosongkan semua input di formulir jika pengiriman sukses
+            formMessage.classList.add('bg-green-100', 'text-green-800'); 
+            formMessage.classList.remove('bg-red-100', 'text-red-800'); 
+            if (form) { 
+                form.reset(); 
             }
         } else { // Jika statusnya bukan 'success' (berarti 'error')
-            formMessage.classList.add('bg-red-100', 'text-red-800'); // Gaya error (merah)
-            formMessage.classList.remove('bg-green-100', 'text-green-800'); // Menghapus gaya sukses jika ada
+            formMessage.classList.add('bg-red-100', 'text-red-800'); 
+            formMessage.classList.remove('bg-green-100', 'text-green-800'); 
         }
 
         // Menyembunyikan pesan setelah 5 detik dan membersihkan URL
@@ -59,12 +57,9 @@ const status = urlParams.get('status');   // Mengambil nilai parameter 'status'
         }, 5000); // Waktu tunda 5000 milidetik (5 detik)
     }
 
-    // Event listener untuk pengiriman formulir (tidak menggunakan preventDefault)
-    // Server.js akan melakukan redirect setelah memproses, jadi kita biarkan submit normal
-    if (form) { // Pastikan elemen form ditemukan sebelum menambahkan event listener
+
+    if (form) { 
         form.addEventListener('submit', function(event) {
-            // Tidak ada logika khusus di sini karena backend (server.js) yang akan menangani
-            // pengiriman dan redirect-nya. JavaScript frontend hanya membaca hasil redirect.
         });
     }
 });
